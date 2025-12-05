@@ -1,0 +1,18 @@
+
+name: user_analytics_hybrid
+steps:
+  - load:
+      csv: "s3://raw-data/small_lookup_table/"
+      # This step is small and runs fast, so keep it local.
+      alias: lookup_table # Adding alias for local processing
+      target: local
+
+  - transform:
+      sql: "SELECT t1.*, t2.lookup_val FROM large_events t1 JOIN lookup_table t2..."
+      # This step involves joining 1TB of data, so it must run in the cloud.
+      output_alias: transformed_large_data # Adding output_alias
+      target: aws
+
+  - save:
+      parquet: "./output/processed_data.parquet"
+      target: local # Save the final small aggregated result back to the laptop

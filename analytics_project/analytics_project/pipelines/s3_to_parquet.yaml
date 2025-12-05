@@ -1,0 +1,14 @@
+
+# pipeline/s3_to_parquet.yaml
+name: s3_ingestion
+version: 1
+inputs:
+  - type: s3
+    uri: s3://${{ input.bucket }}/${{ input.prefix }}
+    format: csv
+transformations:
+  - python: |
+      transformed_df = df.filter(pl.col("is_valid") == True)
+output:
+  type: parquet
+  path: ./data/raw/clean_output

@@ -1,0 +1,4 @@
+project_name: analytics_project
+version: 0.1.0
+default_engine: local
+local_storage: .devlake/data

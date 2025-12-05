@@ -1,0 +1,11 @@
+
+# DevLake Local State (REQ-003)
+.devlake/
+
+# Python
+__pycache__/
+*.pyc
+
+# Output
+/data/
+/output/

@@ -1,0 +1,19 @@
+
+# examples/quickstart/pipeline.yaml
+name: quickstart
+version: 1
+triggers:
+  - schedule: "manual"
+steps:
+  - load:
+      csv: "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
+      alias: airports
+
+  - transform:
+      sql: "SELECT iso_country, COUNT(*) as airport_count FROM airports GROUP BY iso_country ORDER BY 2 DESC"
+      output_alias: country_counts
+
+  - save:
+      parquet: "./output/country_counts.parquet"
+tests:
+  - assert_no_null: iso_country

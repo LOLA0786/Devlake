@@ -1,0 +1,22 @@
+
+# pipeline/transform_github_data.yaml
+name: github_transform_v1
+version: 1
+triggers:
+  - schedule: "0 0 * * *"
+inputs:
+  - type: git
+    repo: ${{ input.repo_url }}
+    branch: main
+transformations:
+  - sql: |
+      SELECT 
+        author_email,
+        COUNT(DISTINCT commit_hash) as commit_count
+      FROM github_commits
+      GROUP BY 1
+      HAVING commit_count > 5
+    output_alias: top_contributors
+output:
+  type: delta
+  path: ./data/processed/github_metrics
